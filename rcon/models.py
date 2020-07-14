@@ -50,13 +50,7 @@ class PlayerOnChat(pydantic.BaseModel):
     target: str
 
 
-class PlayerOnSquadChange(pydantic.BaseModel):
-    player_name: str
-    team_id: int
-    squad_ind: int
-
-
-class PlayerOnTeamChange(pydantic.BaseModel):
+class PlayerOnSquadOrTeamChange(pydantic.BaseModel):
     player_name: str
     team_id: int
     squad_ind: int
