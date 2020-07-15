@@ -32,6 +32,7 @@ class Listener(Client):
             "player.onAuthenticated": self._handle_player_on_auth,
             "player.onDisconnect": self._handle_player_on_disconnect,
             "player.onLeave": self._handle_player_on_leave,
+            "player.onSpawn": self._handle_player_on_spawn,
             "player.onKill": self._handle_player_on_kill,
             "player.onChat": self._handle_player_on_chat,
             "player.onSquadChange": self._handle_player_on_squad_or_team_change,
@@ -80,7 +81,27 @@ class Listener(Client):
 
     async def _handle_player_on_leave(self, event: List[str]):
         try:
-            on_leave = models.PlayerOnLeave()
+            offset = int(event[2]) + 4
+            event = event[offset:]
+            on_leave = models.PlayerOnLeave(
+                player_name=event[0],
+                player_guid=event[1],
+                team_id=event[2],
+                squad_id=event[3],
+                kills=event[4],
+                deaths=event[5],
+                score=event[6],
+                rank=event[7],
+                ping=event[8],
+                player_type=event[9],
+            )
+        except (ValidationError, IndexError):
+            # we catch IndexError in case the event has not enough data positions
+            return
+
+    async def _handle_player_on_spawn(self, event: List[str]):
+        try:
+            on_spawn = models.PlayerOnSpawn(player_name=event[1], team_id=event[2])
         except ValidationError:
             return
 
