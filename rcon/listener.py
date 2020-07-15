@@ -33,15 +33,15 @@ class Listener(Client):
             "player.onDisconnect": self._handle_player_on_disconnect,
             "player.onLeave": self._handle_player_on_leave,
             "player.onKill": self._handle_player_on_kill,
-            # "player.onChat":
-            # "player.onSquadChange"
-            # "player.onTeamChange":
-            # "punkBuster.onMessage":
-            # "server.onMaxPlayerCountChange":
-            # "server.onLevelLoaded":
-            # "server.onRoundOver":
-            # "server.onRoundOverPlayers":
-            # "server.onRoundOverTeamScores":
+            "player.onChat": self._handle_player_on_chat,
+            "player.onSquadChange": self._handle_player_on_squad_or_team_change,
+            "player.onTeamChange": self._handle_player_on_squad_or_team_change,
+            "punkBuster.onMessage": self._handle_punk_buster_on_message,
+            "server.onMaxPlayerCountChange": self._handle_server_on_max_player_count_change,
+            "server.onLevelLoaded": self._handle_server_on_level_loaded,
+            "server.onRoundOver": self._handle_server_on_round_over,
+            "server.onRoundOverPlayers": self._handle_server_on_round_over_players,
+            "server.onRoundOverTeamScores": self._handle_server_on_round_over_team_scores,
         }
         while True:
             try:
@@ -50,8 +50,7 @@ class Listener(Client):
             except asyncio.TimeoutError:
                 pass
             except KeyError:
-                # logger.error(f"{event} it's not a valid event {self.ip}:{self.port}")
-                pass
+                logger.error(f"{event} it's not a valid event {self.ip}:{self.port}")
 
     async def server_info_loop(self):
         while True:
@@ -92,3 +91,52 @@ class Listener(Client):
             )
         except ValidationError:
             return
+
+    async def _handle_player_on_chat(self, event: List[str]):
+        # TODO
+        pass
+
+    async def _handle_player_on_squad_or_team_change(self, event: List[str]):
+        try:
+            on_change = models.PlayerOnSquadOrTeamChange(
+                player_name=event[1], team_id=event[2], squad_id=event[3]
+            )
+        except ValidationError:
+            return
+
+    async def _handle_punk_buster_on_message(self, event: List[str]):
+        try:
+            pb_msg = models.PunkBusterOnMessage(message=event[1])
+        except ValidationError:
+            return
+
+    async def _handle_server_on_max_player_count_change(self, event: List[str]):
+        try:
+            on_count_change = models.ServerOnMaxPlayerCountChange(count=event[1])
+        except ValidationError:
+            return
+
+    async def _handle_server_on_level_loaded(self, event: List[str]):
+        try:
+            on_level_loaded = models.ServerOnLevelLoaded(
+                level_key=event[1],
+                game_mode=event[2],
+                rounds_player=event[3],
+                rounds_total=event[4],
+            )
+        except ValidationError:
+            return
+
+    async def _handle_server_on_round_over(self, event: List[str]):
+        try:
+            on_round_over = models.ServerOnRoundOver(team_id=event[1])
+        except ValidationError:
+            return
+
+    async def _handle_server_on_round_over_players(self, event: List[str]):
+        # TODO
+        pass
+
+    async def _handle_server_on_round_over_team_scores(self, event: List[str]):
+        # TODO
+        pass
