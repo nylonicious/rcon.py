@@ -2,6 +2,7 @@ import pydantic
 
 # custom validator for EA GUID
 EAGUID = pydantic.constr(regex=r"EA_[0-9A-F]{32}")
+PBGUID = pydantic.constr(regex=r"[0-9a-f]{32}")
 
 
 class PlayerOnJoin(pydantic.BaseModel):
