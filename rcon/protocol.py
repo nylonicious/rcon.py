@@ -43,10 +43,10 @@ class Protocol(asyncio.Protocol):
             packet, packet_size = Packet.decode(self.receive_buffer)
             # remove bytes we already processed and decoded into Packet
             del self.receive_buffer[:packet_size]
-            if packet.is_response and packet.sequence in self.requests.keys():
+            if packet.is_response and packet.sequence in self.requests:
                 # set result to a request as soon it becomes available
                 self.requests[packet.sequence].set_result(packet.words)
-            else:
+            elif not packet.is_response and packet.is_from_server:
                 # put event packet into queue
                 self.events.put_nowait(packet.words)
                 # acknowledge that we received event packet by sending it back
