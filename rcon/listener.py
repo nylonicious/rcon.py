@@ -46,7 +46,7 @@ class Listener(Client):
         }
         while True:
             try:
-                event = await self._protocol.listen()
+                event = await self.listen()
                 await event_handlers[event[0]](event)
             except asyncio.TimeoutError:
                 pass

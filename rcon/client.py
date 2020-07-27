@@ -44,6 +44,9 @@ class Client:
     async def send_command(self, words: List[str]) -> List[str]:
         return await self._protocol.send(words)
 
+    async def listen(self) -> List[str]:
+        return await asyncio.wait_for(self._protocol.events.get(), self._timeout)
+
     async def _authenticate(self):
         hash_request = await self.send_command(["login.hashed"])
         if hash_request[0] != "OK":

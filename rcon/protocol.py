@@ -24,9 +24,6 @@ class Protocol(asyncio.Protocol):
         self.client_sequence += 1
         return await self._recv(sequence_to_match)
 
-    async def listen(self) -> List[str]:
-        return await asyncio.wait_for(self.events.get(), self.timeout)
-
     async def _recv(self, sequence: int) -> List[str]:
         self.requests[sequence] = self.loop.create_future()
         try:
