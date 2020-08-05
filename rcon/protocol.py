@@ -47,7 +47,7 @@ class Protocol(asyncio.Protocol):
                 # put event packet into queue
                 self.events.put_nowait(packet.words)
                 # acknowledge that we received event packet by sending it back
-                response = Packet(packet.sequence, True, True, packet.words)
+                response = Packet(packet.sequence, True, True, ["OK"])
                 if not self.transport.is_closing():
                     self.transport.write(response.encode())
 
