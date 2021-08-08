@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "rcon.py"
+version = "0.0.0"
+description = ""
+authors = ["Nylonicious <50183564+nylonicious@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+black = "^21.7b0"
+flake8 = "^3.9.2"
+isort = "^5.9.3"
+mypy = "^0.910"
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+disallow_any_generics = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+follow_imports = "silent"
+ignore_missing_imports = true
+pretty = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
